@@ -1,0 +1,115 @@
+.table-container
+  %table.table.table-striped.table-bordered.table-hover
+    %form#search
+      %thead
+        %tr{:role => "row"}
+          %th{:width => "22%"}
+            Simple Search
+          %th{:width => "22%"}
+            Search Title
+          %th{:width => "22%"}
+            Fuzzy Search Account Description
+          %th{:width => "22%"}
+            IDs Search
+          %th{:width => "12%"}
+        %tr{:role => "row"}
+          %td
+            %input#simple-search.form-control.form-filter.input-sm{type: "text"}
+          %td
+            %input#search-title.form-control.form-filter.input-sm{type: "text"}
+          %td
+            %input#fuzzy-search.form-control.form-filter.input-sm{type: "text"}
+          %td
+            %input#ids-search.form-control.form-filter.input-sm{type: "text"}
+          %td
+            %input#submit.btn.btn-primary{type: 'submit'}
+
+.row
+  .col-md-12
+    %table#table.table.table-striped.table-bordered.table-hover.table-condensed
+      %thead
+        %tr{role: "row"}
+          %th{width: "5%"}
+            Adjustment Identifier
+          %th{width: "15%"}
+            Adjustment Type
+          %th{width: "20%"}
+            Title
+          %th{width: "15%"}
+            Account Description
+          %th{width: "10%"}
+            Income Category
+          %th{width: "10%"}
+            Estimate Mumber
+          %th{width: "10%"}
+            Current Grants
+      %tbody
+        %tfoot
+          %tr
+            %td(colspan=9)
+              %span#pagination{style: 'display:inline-block;'}
+
+:javascript
+  function simpleData(){ return $('#simple-search').val() }
+
+  function titleData(){ return $('#search-title').val() }
+
+  function fuzzyData(){ return $('#fuzzy-search').val() }
+
+  function idData(){ return $('#ids-search').val() }
+
+  Table = function(el){
+    this.$el = $(el);
+    this.$paginator = $('#pagination');
+
+    this.paginatorClicked = function(page, event){
+      sendAjax(page);
+    };
+
+    this.refreshTable = function(e, data){
+      $('tbody', this.$el).html(HandlebarsTemplates['organisation/table'](data));
+
+      this.$paginator.pagination({
+        items: data.total_count,
+        itemsOnPage: data.page_size,
+        currentPage: data.page,
+        cssStyle: 'light-theme',
+        displayedPages: 20,
+        onPageClick: this.paginatorClicked
+      });
+
+      if(data.total_pages > 1) {
+        this.$paginator.show();
+      }
+      else {
+        this.$paginator.hide();
+      }
+    };
+
+    _.bindAll(this, 'refreshTable', 'paginatorClicked');
+  };
+
+  var table = new Table('#table')
+
+  function sendAjax(page){
+    return $.ajax({
+      url: '/organisation/search',
+      data: {
+        simple_search: simpleData(),
+        search_title: titleData(),
+        fuzzy_search: fuzzyData(),
+        id_search: idData(),
+        page: page
+      },
+      context: this,
+      success: function(data){
+        table.refreshTable(null, data)
+      }
+    });
+  }
+
+  $('#submit').click(function(e){
+    e.preventDefault();
+
+    sendAjax();
+  });

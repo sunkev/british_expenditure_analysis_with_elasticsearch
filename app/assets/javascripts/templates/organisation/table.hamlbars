@@ -1,0 +1,17 @@
+{{#each organisations}}
+%tr
+  %td
+    {{ this.adjustment_identifier }}
+  %td
+    {{ this.adjustment_type }}
+  %td
+    {{ this.title }}
+  %td
+    {{ this.account_description }}
+  %td
+    {{ this.income_category }}
+  %td
+    {{ this.estimate_number }}
+  %td
+    {{ this.pesa_current_grants }}
+{{/each}}

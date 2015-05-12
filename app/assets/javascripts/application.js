@@ -12,5 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require handlebars
 //= require turbolinks
+//= require bootstrap-sprockets
+//= require jquery.simplePagination
+//= require underscore
 //= require_tree .

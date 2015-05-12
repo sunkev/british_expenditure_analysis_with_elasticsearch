@@ -11,4 +11,4 @@ development:
   database: british_expenditure_development
   pool: 5
   username:
-  password: 
+  password:

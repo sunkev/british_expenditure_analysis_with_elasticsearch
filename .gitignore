@@ -12,3 +12,4 @@
 !/log/.keep
 /tmp
 /config/database.yml
+lib/tasks/2012AdjustmentTableResult_2011-12.csv
